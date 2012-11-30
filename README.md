@@ -12,6 +12,6 @@ Works exactly like the {exp:channel:entries} tag.
       {/exp:activitee:entries}
       </ul>
 
-
+There is a `{last_activity}` tag, but for the moment you can't use any date formatting on it just yet.
 
 
