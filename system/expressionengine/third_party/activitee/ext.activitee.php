@@ -40,20 +40,58 @@ class Activitee_ext {
 	  if (isset($this->EE->TMPL->tagparams['activitee_on']))
 	  {
 	    $results = activitee_get_cache('results');
-	    
+
 	    if (count($results) > 0)
 	    {
 	      foreach ($query_result as &$q_row)
 	      {
 	        if (isset($results[$q_row['entry_id']]))
 	        {
-	          $q_row['last_activity'] = $results[$q_row['entry_id']]['last_activity'];
+            $q_row['last_activity'] = $results[$q_row['entry_id']]['last_activity'];
 	        }
 	      }
 	    }
-	    
 	  }
 	  return $query_result;
+	}
+	
+	public function channel_entries_tagdata($tagdata, $row, &$obj)
+	{
+	  // A little bit of cheating to enable date
+	  // formatting for the last_activity variable.
+	  if (isset($row['last_activity']))
+	  {
+	    if ($row['last_activity'] === $row['entry_date'])
+	    {
+	      $tagdata = str_replace('last_activity', 'entry_date', $tagdata);
+	    } 
+	    elseif ($row['last_activity'] === $row['recent_comment_date'])
+	    {
+	      $tagdata = str_replace('last_activity', 'recent_comment_date', $tagdata);	      
+	    }
+	  }
+	  return $tagdata;
+	}
+	
+	private function _match_date_vars($str='')
+	{
+	  if (strpos($str, 'format=') === FALSE) return;
+	
+		if (preg_match_all("/".LD."([^".RD."]*?)\s+format=[\"'](.*?)[\"']".RD."/s", $str, $matches, PREG_SET_ORDER))
+		{
+			for ($j = 0, $tot = count($matches); $j < $tot; $j++)
+			{
+				$matches[$j][0] = str_replace(array(LD,RD), '', $matches[$j][0]);
+
+				$this->date_vars[$matches[$j][1]][$matches[$j][0]] = array_merge(array($matches[$j][2]), $this->EE->localize->fetch_date_params($matches[$j][2]));
+			}
+		}
+		else
+		{
+			// make sure we don't try to parse date variables again on further calls to parse_variables() or parse_variables_row()
+			$this->date_vars = FALSE;
+		}
+		
 	}
 	
 	/**
@@ -72,7 +110,8 @@ class Activitee_ext {
 		$this->settings = array();
 		
 		$hooks = array(
-			'channel_entries_query_result'	=> 'channel_entries_query_result'
+			'channel_entries_query_result'	=> 'channel_entries_query_result',
+			'channel_entries_tagdata' => 'channel_entries_tagdata'
 		);
 
 		foreach ($hooks as $hook => $method)

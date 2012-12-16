@@ -51,7 +51,7 @@ class Activitee {
   		{
   		  $results[$row->entry_id] = array(
   		    'entry_id' => $row->entry_id,
-  		    'last_activity' => $row->last_activity,
+  		    'last_activity' => $row->last_activity
   		  );
   		}
 
@@ -65,16 +65,11 @@ class Activitee {
 			$this->EE->TMPL->tagdata['orderby'] = '';
 			$this->EE->TMPL->tagdata['sort'] = '';
 
-      // if ($entry_id_param = $this->_fetch_param('entry_id') AND strtolower(substr($entry_id_param, 0, 3)) === 'not')
-      // {
-      //   $entry_id_vals = substr($entry_id_param, 3);
-      // }
-
   		$this->EE->TMPL->tagparams[$par] = implode('|', array_keys($results));
 
       
     }
-	
+    	
 		if ( ! class_exists('channel'))
 		{
 			require_once PATH_MOD.'channel/mod.channel'.EXT;

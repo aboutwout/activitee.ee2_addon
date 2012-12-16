@@ -12,7 +12,7 @@
 
 if (! defined('ACTIVITEE_VERSION'))
 {
-  define('ACTIVITEE_VERSION', '0.1');
+  define('ACTIVITEE_VERSION', '0.2');
   define('ACTIVITEE_NAME', 'Activitee');
   define('ACTIVITEE_DOCS', 'http://www.baseworks.nl/addons/activitee');
   define('ACTIVITEE_DESCRIPTION', 'Order entries on most recent activity.');
